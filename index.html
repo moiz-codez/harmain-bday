@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D10">
+<meta name="description" content="A twenty-first birthday, in fifteen frames.">
+<meta property="og:title" content="A Long Exposure">
+<meta property="og:description" content="A twenty-first birthday, in fifteen frames.">
+<meta property="og:type" content="website">
+<title>A Long Exposure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..600;1,6..72,200..500&family=DM+Mono:wght@300;400;500&display=swap">
+
+<style>
+  :root {
+    --ground: #0A0D10;
+    --ground-2: #10151A;
+    --surface: #161C23;
+    --surface-2: #1C242C;
+    --line: #232C35;
+    --line-soft: #1A2128;
+    --ink: #EDE7DC;
+    --ink-2: #A3AFB6;
+    --ink-3: #7E8B94;
+    --amber: #D98E4F;
+    --teal: #6FBFB8;
+
+    --serif: "Newsreader", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --measure: 34rem;
+    --step: clamp(1rem, 0.6rem + 1.6vw, 1.4rem);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  /* Class rules outrank the UA sheet's [hidden] default, so the elements this
+     page toggles (the veil, her quotes) need this to actually disappear. */
+  [hidden] { display: none !important; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: rgba(111, 191, 184, 0.18);
+  }
+
+  /* grain + a faint safelight glow, fixed so it reads as the room not the page */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(217, 142, 79, 0.07), transparent 60%),
+      radial-gradient(90% 60% at 50% 110%, rgba(111, 191, 184, 0.05), transparent 65%);
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 34rem;
+    margin: 0 auto;
+    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+    padding-block: 0;
+  }
+
+  /* ---------- shared typography ---------- */
+
+  .edge {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 0;
+  }
+
+  .edge--quiet { color: var(--ink-3); }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: clamp(3rem, 2rem + 8vw, 5.25rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(1.75rem, 1.3rem + 2.2vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.375rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  p { margin: 0; max-width: var(--measure); }
+
+  .lede {
+    font-size: 1.1875rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  .aside {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--line-soft);
+    margin: 0;
+  }
+
+  /* ---------- masthead ---------- */
+
+  header.mast {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-block: calc(3.25rem + env(safe-area-inset-top)) 2.5rem;
+  }
+
+  .mast-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    align-items: baseline;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mast-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ---------- the roll ---------- */
+
+  .roll {
+    display: grid;
+    gap: 0;
+    padding-block: 1rem 3.5rem;
+  }
+
+  .frame {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+    padding-block: 2.25rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .frame:first-child { border-top: 1px solid var(--line-soft); }
+
+  .frame-no {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  /* the perforation: two small notches, the way a frame is bounded on real stock */
+  .frame-no::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: repeating-linear-gradient(to right, var(--line) 0 6px, transparent 6px 13px);
+  }
+
+  .frame-title {
+    color: var(--ink);
+  }
+
+  .frame-body {
+    color: var(--ink-2);
+  }
+
+  .data {
+    font-family: var(--mono);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    display: grid;
+    gap: 0.125rem;
+    margin: 0.375rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .data li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.75rem;
+    justify-content: space-between;
+    border-bottom: 1px dotted var(--line);
+    padding-block: 0.3125rem;
+  }
+
+  .data dfn,
+  .data .k {
+    font-style: normal;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    align-self: center;
+  }
+
+  .data .v { color: var(--ink); }
+
+  .arabic {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    color: var(--amber);
+    font-family: var(--serif);
+  }
+
+  /* ---------- the questions ---------- */
+
+  .act {
+    padding-block: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .quiz {
+    margin-top: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .quiz-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .q-text {
+    font-size: 1.375rem;
+    line-height: 1.3;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .opts {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .opt {
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: left;
+    font: inherit;
+    font-size: 1.0625rem;
+    color: var(--ink);
+    background: var(--ground-2);
+    border: 1px solid var(--line);
+    padding: 0.875rem 1rem;
+    min-height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+  }
+
+  .opt:active { background: var(--surface-2); border-color: var(--teal); }
+
+  .opt .mark {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    flex: none;
+    transition: color 140ms ease;
+  }
+
+  .opt:hover {
+    background: var(--surface-2);
+    border-color: var(--ink-3);
+  }
+
+  .opt:hover .mark { color: var(--teal); }
+
+  .opt:focus-visible,
+  .field:focus-visible,
+  .btn:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+  }
+
+  .field {
+    font: inherit;
+    font-size: 1.0625rem;
+    width: 100%;
+    color: var(--ink);
+    background: var(--ground-2);
+    border: 1px solid var(--line);
+    padding: 0.8125rem 0.9375rem;
+    resize: vertical;
+    min-height: 5.5rem;
+    line-height: 1.5;
+  }
+
+  .field::placeholder { color: var(--ink-3); font-style: italic; }
+
+  .quiz-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .btn {
+    appearance: none;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ground);
+    background: var(--teal);
+    border: 1px solid var(--teal);
+    padding: 0.875rem 1.25rem;
+    min-height: 44px;
+    cursor: pointer;
+    transition: filter 140ms ease;
+  }
+
+  .btn:hover { filter: brightness(1.12); }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--ink-3);
+    border-color: var(--line);
+  }
+
+  .btn--ghost:hover { color: var(--ink-2); border-color: var(--ink-3); }
+
+  .prog {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- the final frame ---------- */
+
+  .plate {
+    margin-top: 2rem;
+    border: 1px solid var(--line);
+    background: #06080A;
+    padding: 0.75rem;
+  }
+
+  .plate-inner {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 100%;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+  }
+
+  .plate-veil {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 0.5rem;
+    text-align: center;
+    background: rgba(6, 8, 10, 0.72);
+    padding: 1.5rem;
+  }
+
+  .plate-veil p {
+    max-width: 22rem;
+    margin-inline: auto;
+    color: var(--ink-2);
+    font-style: italic;
+  }
+
+  .plate-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1px dotted var(--line);
+  }
+
+  .legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.125rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .legend li {
+    display: flex;
+    gap: 0 0.75rem;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .legend .k {
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .legend .v { color: var(--ink-2); }
+
+  .seed {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    word-break: break-word;
+  }
+
+  .herwords {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2.75rem;
+  }
+
+  blockquote {
+    margin: 0;
+    padding-left: 1.125rem;
+    border-left: 1px solid var(--amber);
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  blockquote .said {
+    font-style: italic;
+    font-size: 1.1875rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  /* ---------- the letter ---------- */
+
+  .letter {
+    padding-block: 3.5rem 1rem;
+    display: grid;
+    gap: 1.125rem;
+    border-top: 1px solid var(--line);
+    margin-top: 3.5rem;
+  }
+
+  .letter p {
+    font-size: 1.1875rem;
+    line-height: 1.7;
+  }
+
+  .letter .salut {
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .sign {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+    margin-top: 0.5rem;
+  }
+
+  footer {
+    padding-block: 3rem calc(4rem + env(safe-area-inset-bottom));
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 3rem;
+  }
+
+  /* Phone-first and phone-shaped at every width: the column stays 34rem, so
+     a laptop sees the same single-column roll a phone does, just centred. */
+
+  @media (min-width: 26rem) {
+    .frame { padding-block: 2.5rem; }
+    .quiz { padding: 1.75rem 1.5rem 1.5rem; }
+    .plate { padding: 0.875rem; }
+  }
+
+  /* Anything genuinely small — older or split-screen phones. */
+  @media (max-width: 22.5rem) {
+    body { font-size: 1rem; }
+    .wrap { padding-inline: 16px; }
+    .quiz { padding: 1.25rem 1rem 1rem; }
+    .q-text { font-size: 1.25rem; }
+    .opt { font-size: 1rem; padding: 0.75rem 0.875rem; }
+    .lede, .letter p { font-size: 1.0625rem; }
+  }
+
+  /* ---------- reveals: visible at rest, animated only where supported ---------- */
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
+      @keyframes surface {
+        from { opacity: 0.15; transform: translateY(0.75rem); }
+        to   { opacity: 1; transform: none; }
+      }
+      .frame, .act > *, .letter > * {
+        animation: surface auto linear backwards;
+        animation-timeline: view();
+        animation-range: entry 0% entry 65%;
+      }
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mast-strip">
+      <p class="edge">Roll 01 &nbsp;·&nbsp; 21 exp &nbsp;·&nbsp; 09·09·2005</p>
+      <p class="edge edge--quiet">Harmain Sahito</p>
+    </div>
+    <h1>A Long <em>Exposure</em></h1>
+    <div class="mast-sub">
+      <p class="lede">Twenty-one years is a shutter left open a long time. This is what fell on the film.</p>
+      <p class="aside">Seven things you were given and never chose, seven only you can answer, and one frame that develops out of both.</p>
+    </div>
+  </header>
+
+  <section class="roll" aria-label="Seven things you were given">
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 01</span></p>
+      <h3 class="frame-title">The day</h3>
+      <div class="frame-body">
+        <p>You arrived on a Friday — <em>Jumu&rsquo;ah</em>, the one day of the week that has a name of its own.</p>
+        <ul class="data">
+          <li><span class="k">Gregorian</span><span class="v">Fri 9 September 2005</span></li>
+          <li><span class="k">Hijri</span><span class="v">5 Sha&rsquo;b&#257;n 1426 AH</span></li>
+          <li><span class="k">Sign</span><span class="v">Virgo, late in its run</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 02</span></p>
+      <h3 class="frame-title">The light</h3>
+      <div class="frame-body">
+        <p>Sindh got twelve and a half hours of it that day — the year already tipping toward its shorter half.</p>
+        <ul class="data">
+          <li><span class="k">Sunrise</span><span class="v">06:10 PKT</span></li>
+          <li><span class="k">Sunset</span><span class="v">18:37 PKT</span></li>
+          <li><span class="k">Daylight</span><span class="v">12 h 27 m</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 03</span></p>
+      <h3 class="frame-title">The moon</h3>
+      <div class="frame-body">
+        <p>Not a full one. Five days and seventeen hours old, still filling — it wouldn&rsquo;t reach even half until two days after you.</p>
+        <ul class="data">
+          <li><span class="k">Phase</span><span class="v">Waxing crescent</span></li>
+          <li><span class="k">Illuminated</span><span class="v">29 %</span></li>
+          <li><span class="k">First quarter</span><span class="v">11 September 2005</span></li>
+        </ul>
+        <p class="aside" style="margin-top:0.875rem">You turned up under a moon that wasn&rsquo;t finished yet.</p>
+      </div>
+    </article>
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 04</span></p>
+      <h3 class="frame-title">The name</h3>
+      <div class="frame-body">
+        <p class="arabic" lang="ar" dir="rtl">&#1575;&#1604;&#1581;&#1585;&#1605;&#1610;&#1606;</p>
+        <p>It comes from <em>&#7717;aram</em> — sacred, inviolable, not to be trespassed on. Then the ending <em>-ayn</em>, which in Arabic does something English can&rsquo;t: it marks exactly two. <em>Al-&#7716;aramayn</em>, the two sanctuaries.</p>
+        <p class="aside" style="margin-top:0.875rem">Your name is grammatically incapable of being singular. It needs two of something before it means anything at all. I don&rsquo;t think that&rsquo;s nothing.</p>
+      </div>
+    </article>
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 05</span></p>
+      <h3 class="frame-title">The count</h3>
+      <div class="frame-body">
+        <p>As of today, exactly — no rounding, five leap days included.</p>
+        <ul class="data">
+          <li><span class="k">Days</span><span class="v">7,670</span></li>
+          <li><span class="k">Weeks</span><span class="v">1,095</span></li>
+          <li><span class="k">Hours</span><span class="v">184,080</span></li>
+          <li><span class="k">Full moons</span><span class="v">about 260</span></li>
+          <li><span class="k">Trips round the sun</span><span class="v">21</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 06</span></p>
+      <h3 class="frame-title">The world, that week</h3>
+      <div class="frame-body">
+        <p>Mariah Carey was at number one in America and had been for most of the summer. And on the day itself, India and Pakistan handed each other&rsquo;s prisoners back across the border as a gesture of goodwill.</p>
+        <p class="aside" style="margin-top:0.875rem">Not a bad week to start in. Someone singing about belonging together, two countries briefly behaving.</p>
+      </div>
+    </article>
+
+    <article class="frame">
+      <p class="frame-no"><span class="edge">Frame 07</span></p>
+      <h3 class="frame-title">Everything above</h3>
+      <div class="frame-body">
+        <p>&mdash; the date, the moon, the hours of light, the name and its stubborn dual ending &mdash; arrived without your consent. It was all decided before you could weigh in.</p>
+        <p style="margin-top:0.875rem">The rest of the roll is yours.</p>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="act" aria-labelledby="q-h">
+    <p class="edge">Exposures 08 &ndash; 14</p>
+    <h2 id="q-h">Seven only you can answer</h2>
+    <p class="lede">Nothing here is a test and none of it is trivia. Answer quickly, the way you&rsquo;d answer out loud. Every answer changes the last frame, so it comes out looking like whoever filled it in.</p>
+
+    <div class="quiz" id="quiz">
+      <div class="quiz-head">
+        <p class="edge" id="q-label">Exposure 08</p>
+        <p class="prog" id="q-prog">01 / 07</p>
+      </div>
+      <p class="q-text" id="q-text">What hour of the day feels most like you?</p>
+      <div class="opts" id="q-opts"></div>
+      <div class="quiz-foot">
+        <button class="btn btn--ghost" id="q-back" type="button">Back</button>
+        <button class="btn" id="q-next" type="button" hidden>Next</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="act" aria-labelledby="p-h">
+    <p class="edge">Frame 15 &nbsp;·&nbsp; final</p>
+    <h2 id="p-h">The last frame</h2>
+    <p class="lede">Seven thousand six hundred and seventy marks, one for every day you have been alive. Twenty-one rings, one for every year, the innermost your first. It is drawn from your name, your date, and the seven answers above — which is a long way of saying no one else can ever produce this one.</p>
+
+    <div class="plate">
+      <div class="plate-inner">
+        <canvas id="plate" width="1120" height="1120" role="img"
+                aria-label="A circular field of 7,670 small marks arranged in 21 concentric rings, one mark for each day of Harmain's life."></canvas>
+        <div class="plate-veil" id="veil">
+          <p class="edge">Undeveloped</p>
+          <p>Answer the seven above and this comes up in colour. The brightest mark will be today.</p>
+          <p><button class="btn btn--ghost" id="skip" type="button">Develop it anyway</button></p>
+        </div>
+      </div>
+      <div class="plate-caption">
+        <ul class="legend">
+          <li><span class="k">Marks</span><span class="v">7,670 &mdash; one a day</span></li>
+          <li><span class="k">Rings</span><span class="v">21 &mdash; one a year</span></li>
+          <li><span class="k">Brightest</span><span class="v">today</span></li>
+        </ul>
+        <p class="seed" id="seed">Seed &nbsp;·&nbsp; HARMAIN SAHITO &nbsp;·&nbsp; 2005-09-09 &nbsp;·&nbsp; unexposed</p>
+      </div>
+    </div>
+
+    <div class="herwords" id="herwords" hidden>
+      <hr class="rule">
+      <p class="edge">In your own words</p>
+      <blockquote id="bq1"><p class="said"></p><p class="edge edge--quiet">On being left alone</p></blockquote>
+      <blockquote id="bq2"><p class="said"></p><p class="edge edge--quiet">On what carried you through the year</p></blockquote>
+    </div>
+  </section>
+
+  <section class="letter">
+    <p class="salut">Harmain,</p>
+    <p>Everything in the first half of this was handed to you. The date, the moon that wasn&rsquo;t full, the name that refuses to be singular. You had no say in any of it.</p>
+    <p>Everything in the second half you answered yourself, and the picture only exists because you did. That felt like the honest way round.</p>
+    <p>I won&rsquo;t pretend I know you well. I know enough to be sure you are loved, by more people than you probably count, and I know I&rsquo;m glad to have your friendship — I don&rsquo;t hold it lightly.</p>
+    <p>Happy twenty-one. I hope this year is gentle with you.</p>
+    <p class="sign">— Moiz</p>
+  </section>
+
+  <footer>
+    <p class="edge">A Long Exposure &nbsp;·&nbsp; 09·09·2026</p>
+    <p class="edge edge--quiet">Screenshot the frame if you want to keep it</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var BIRTH = { y: 2005, m: 9, d: 9 };
+  var YEARS = 21;
+  var STORE = "long-exposure-v1";
+
+  /* ---------------------------------------------------------------- questions */
+
+  var QUESTIONS = [
+    {
+      key: "hour",
+      text: "What hour of the day feels most like you?",
+      opts: [
+        { label: "Just before dawn, when nothing has started", v: "dawn" },
+        { label: "The flat middle of the afternoon", v: "noon" },
+        { label: "The last twenty minutes of light", v: "dusk" },
+        { label: "Long after everyone else has gone to sleep", v: "night" }
+      ]
+    },
+    {
+      key: "good",
+      text: "Something good happens. What is the first thing you actually do?",
+      opts: [
+        { label: "Tell someone before it has finished happening", v: "tell" },
+        { label: "Keep it to myself for a while", v: "keep" },
+        { label: "Reach for a camera", v: "shoot" },
+        { label: "Notice it properly about three days later", v: "late" }
+      ]
+    },
+    {
+      key: "return",
+      text: "What do you keep going back to, even knowing how it ends?",
+      opts: [
+        { label: "The same few songs", v: "songs" },
+        { label: "A show I have already finished", v: "show" },
+        { label: "One walk, one route", v: "walk" },
+        { label: "Certain people", v: "people" }
+      ]
+    },
+    {
+      key: "weather",
+      text: "Choose the weather for an ordinary day.",
+      opts: [
+        { label: "Cold and very clear", v: "clear" },
+        { label: "Warm haze", v: "haze" },
+        { label: "Rain, the steady kind", v: "rain" },
+        { label: "Wind, just before a storm", v: "wind" }
+      ]
+    },
+    {
+      key: "alone",
+      text: "What are you like when nobody needs anything from you?",
+      free: true,
+      placeholder: "A sentence is plenty."
+    },
+    {
+      key: "carried",
+      text: "Name one small thing that made this year easier to get through.",
+      free: true,
+      placeholder: "Small. It is allowed to be very small."
+    },
+    {
+      key: "colour",
+      text: "If this year had a colour, which end of things was it?",
+      opts: [
+        { label: "Warm — amber, rust, lamplight", v: "warm" },
+        { label: "Cool — blue, slate, early morning", v: "cool" },
+        { label: "Green — growing, unruly", v: "green" },
+        { label: "Grey — and grey is not an insult", v: "grey" }
+      ]
+    }
+  ];
+
+  var answers = {};
+  var idx = 0;
+  var developed = false;
+
+  /* -------------------------------------------------------------- persistence */
+
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(STORE);
+      if (!raw) return;
+      var parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        answers = parsed.answers || {};
+        idx = Math.min(Math.max(parsed.idx | 0, 0), QUESTIONS.length - 1);
+        developed = !!parsed.developed;
+      }
+    } catch (e) { /* private mode, blocked storage — carry on with nothing */ }
+  }
+
+  function save() {
+    try {
+      window.localStorage.setItem(STORE, JSON.stringify({
+        answers: answers, idx: idx, developed: developed
+      }));
+    } catch (e) { /* nothing to do; the page works without it */ }
+  }
+
+  /* ---------------------------------------------------------------- utilities */
+
+  function el(id) { return document.getElementById(id); }
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function hash(str) {
+    var h = 2166136261 >>> 0;
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function isLeap(y) { return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0; }
+
+  /* --------------------------------------------------------------- the palette */
+
+  /* Each answer moves one dial. Nothing here is arbitrary decoration:
+     the hour sets the hue, the weather sets how far a day can wander from
+     its ring, what she returns to sets the shape of a mark. */
+
+  var HUES = { dawn: 28, noon: 44, dusk: 14, night: 205 };
+  var SPREAD = { tell: 0.95, keep: 0.42, shoot: 0.7, late: 0.55 };
+  var SHAPE = { songs: "dot", show: "dash", walk: "tick", people: "ring" };
+  var JITTER = { clear: 0.25, haze: 0.85, rain: 0.5, wind: 1.45 };
+  var TINT = { warm: 22, cool: 198, green: 128, grey: 210 };
+  var TINT_SAT = { warm: 62, cool: 48, green: 34, grey: 12 };
+
+  function dials() {
+    var a = answers;
+    return {
+      hue: HUES[a.hour] !== undefined ? HUES[a.hour] : 200,
+      spread: SPREAD[a.good] !== undefined ? SPREAD[a.good] : 0.5,
+      shape: SHAPE[a["return"]] || "dot",
+      jitter: JITTER[a.weather] !== undefined ? JITTER[a.weather] : 0.4,
+      tint: TINT[a.colour] !== undefined ? TINT[a.colour] : 210,
+      tintSat: TINT_SAT[a.colour] !== undefined ? TINT_SAT[a.colour] : 14
+    };
+  }
+
+  function seedString() {
+    var parts = [];
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var q = QUESTIONS[i];
+      var v = answers[q.key];
+      if (!v) { parts.push("—"); }
+      else if (q.free) { parts.push(String(hash(v) % 1000)); }
+      else { parts.push(String(v).slice(0, 4).toUpperCase()); }
+    }
+    return parts.join("·");
+  }
+
+  /* -------------------------------------------------------------- the drawing */
+
+  var canvas = el("plate");
+  var ctx = canvas.getContext("2d");
+  var marks = null;
+  var raf = 0;
+
+  function buildMarks(exposed) {
+    var d = dials();
+    var rng = mulberry32(hash("HARMAIN SAHITO|2005-09-09|" + seedString()));
+    var out = [];
+    var size = canvas.width;
+    var cx = size / 2;
+    var cy = size / 2;
+    var rIn = size * 0.075;
+    var rOut = size * 0.468;
+
+    for (var yr = 0; yr < YEARS; yr++) {
+      var calYear = BIRTH.y + yr;
+      var daysInYear = isLeap(calYear + 1) ? 366 : 365;
+      // radius of this year's orbit
+      var base = rIn + (rOut - rIn) * (yr / (YEARS - 1));
+      var band = (rOut - rIn) / (YEARS - 1);
+
+      for (var day = 0; day < daysInYear; day++) {
+        var t = day / daysInYear;
+        var ang = t * Math.PI * 2 - Math.PI / 2;
+        var wob = (rng() - 0.5) * band * 0.62 * d.jitter;
+        var r = base + wob;
+        var last = (yr === YEARS - 1 && day === daysInYear - 1);
+
+        out.push({
+          x: cx + Math.cos(ang) * r,
+          y: cy + Math.sin(ang) * r,
+          a: 0.24 + rng() * 0.66 * d.spread,
+          s: 0.9 + rng() * (exposed ? 1.9 : 1.0),
+          h: rng(),
+          rot: ang,
+          last: last
+        });
+      }
+    }
+    marks = { list: out, d: d, exposed: exposed, size: size, cx: cx, cy: cy, rOut: rOut };
+    return out.length;
+  }
+
+  function paintBackdrop() {
+    var size = canvas.width;
+    ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = "#06080A";
+    ctx.fillRect(0, 0, size, size);
+    // the faintest vignette, so the rings sit in something rather than on it
+    var g = ctx.createRadialGradient(size / 2, size / 2, size * 0.05, size / 2, size / 2, size * 0.52);
+    g.addColorStop(0, "rgba(255,255,255,0.035)");
+    g.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, size, size);
+  }
+
+  function drawMark(m) {
+    var d = marks.d;
+    var hue, sat, lum;
+
+    if (marks.exposed) {
+      hue = d.hue + (d.tint - d.hue) * (m.h * 0.55);
+      sat = 26 + d.tintSat * (0.35 + m.h * 0.65);
+      lum = 60 + m.h * 28;
+    } else {
+      hue = 205;
+      sat = 6;
+      lum = 40 + m.h * 14;
+    }
+
+    if (m.last && marks.exposed) {
+      ctx.save();
+      ctx.fillStyle = "hsl(" + d.hue + ", 84%, 76%)";
+      ctx.shadowColor = "hsla(" + d.hue + ", 90%, 70%, 0.9)";
+      ctx.shadowBlur = 26;
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, 5.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      return;
+    }
+
+    var col = "hsla(" + hue.toFixed(1) + ", " + sat.toFixed(1) + "%, " + lum.toFixed(1) + "%, " + m.a.toFixed(3) + ")";
+    var shape = marks.exposed ? d.shape : "dot";
+
+    if (shape === "dot") {
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.s, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (shape === "ring") {
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 0.85;
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.s + 0.7, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (shape === "dash") {
+      ctx.save();
+      ctx.translate(m.x, m.y);
+      ctx.rotate(m.rot);
+      ctx.fillStyle = col;
+      ctx.fillRect(-m.s * 1.7, -0.55, m.s * 3.4, 1.1);
+      ctx.restore();
+    } else { // tick — radial, pointing out from the centre
+      ctx.save();
+      ctx.translate(m.x, m.y);
+      ctx.rotate(m.rot + Math.PI / 2);
+      ctx.fillStyle = col;
+      ctx.fillRect(-0.55, -m.s * 1.6, 1.1, m.s * 3.2);
+      ctx.restore();
+    }
+  }
+
+  function render(exposed, animate) {
+    if (raf) { window.cancelAnimationFrame(raf); raf = 0; }
+    buildMarks(exposed);
+    paintBackdrop();
+
+    var list = marks.list;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!animate || reduce) {
+      for (var i = 0; i < list.length; i++) drawMark(list[i]);
+      return;
+    }
+
+    var i2 = 0;
+    var perFrame = 14; // ~9 seconds for 7,670 marks. It should take its time.
+    function step() {
+      var end = Math.min(i2 + perFrame, list.length);
+      for (; i2 < end; i2++) drawMark(list[i2]);
+      if (i2 < list.length) { raf = window.requestAnimationFrame(step); }
+      else { raf = 0; }
+    }
+    raf = window.requestAnimationFrame(step);
+  }
+
+  /* ------------------------------------------------------------------ the quiz */
+
+  var qText = el("q-text");
+  var qOpts = el("q-opts");
+  var qProg = el("q-prog");
+  var qLabel = el("q-label");
+  var qBack = el("q-back");
+  var qNext = el("q-next");
+  var quiz = el("quiz");
+
+  function allAnswered() {
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      if (!answers[QUESTIONS[i].key]) return false;
+    }
+    return true;
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[idx];
+    qText.textContent = q.text;
+    qProg.textContent = pad(idx + 1) + " / " + pad(QUESTIONS.length);
+    qLabel.textContent = "Exposure " + pad(idx + 8);
+    qBack.hidden = idx === 0;
+    qOpts.innerHTML = "";
+
+    if (q.free) {
+      var ta = document.createElement("textarea");
+      ta.className = "field";
+      ta.id = "field-" + q.key;
+      ta.placeholder = q.placeholder || "";
+      ta.value = answers[q.key] || "";
+      ta.setAttribute("aria-label", q.text);
+      qOpts.appendChild(ta);
+      qNext.hidden = false;
+      qNext.textContent = idx === QUESTIONS.length - 1 ? "Develop" : "Next";
+      qNext.onclick = function () {
+        var val = ta.value.trim();
+        if (val) answers[q.key] = val;
+        else delete answers[q.key];
+        advance();
+      };
+      ta.focus({ preventScroll: true });
+    } else {
+      qNext.hidden = true;
+      for (var i = 0; i < q.opts.length; i++) {
+        (function (opt, n) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "opt";
+          b.id = "opt-" + q.key + "-" + opt.v;
+          var mark = document.createElement("span");
+          mark.className = "mark";
+          mark.textContent = answers[q.key] === opt.v ? "●" : String.fromCharCode(97 + n) + ".";
+          var lab = document.createElement("span");
+          lab.textContent = opt.label;
+          b.appendChild(mark);
+          b.appendChild(lab);
+          b.onclick = function () {
+            answers[q.key] = opt.v;
+            advance();
+          };
+          qOpts.appendChild(b);
+        })(q.opts[i], i);
+      }
+    }
+    save();
+  }
+
+  function advance() {
+    if (idx < QUESTIONS.length - 1) {
+      idx++;
+      save();
+      renderQuestion();
+      return;
+    }
+    save();
+    finish();
+  }
+
+  function finish() {
+    developed = true;
+    save();
+
+    quiz.innerHTML = "";
+    var head = document.createElement("p");
+    head.className = "edge";
+    head.textContent = "Exposures complete";
+    var body = document.createElement("p");
+    body.className = "aside";
+    body.textContent = "Seven answers, all yours. The last frame is developing below.";
+    var again = document.createElement("p");
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn--ghost";
+    btn.textContent = "Answer again";
+    btn.onclick = function () {
+      answers = {};
+      idx = 0;
+      developed = false;
+      save();
+      buildQuizShell();
+      renderQuestion();
+      el("veil").hidden = false;
+      el("herwords").hidden = true;
+      el("seed").textContent = "Seed · HARMAIN SAHITO · 2005-09-09 · unexposed";
+      render(false, false);
+      quiz.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    again.appendChild(btn);
+    quiz.appendChild(head);
+    quiz.appendChild(body);
+    quiz.appendChild(again);
+
+    reveal();
+    el("plate").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function reveal() {
+    el("veil").hidden = true;
+    el("seed").textContent = "Seed · HARMAIN SAHITO · 2005-09-09 · " + seedString();
+
+    var w1 = answers.alone;
+    var w2 = answers.carried;
+    var box = el("herwords");
+    var b1 = el("bq1");
+    var b2 = el("bq2");
+    b1.hidden = !w1;
+    b2.hidden = !w2;
+    if (w1) b1.querySelector(".said").textContent = "“" + w1 + "”";
+    if (w2) b2.querySelector(".said").textContent = "“" + w2 + "”";
+    box.hidden = !(w1 || w2);
+
+    render(true, true);
+  }
+
+  function buildQuizShell() {
+    quiz.innerHTML =
+      '<div class="quiz-head">' +
+        '<p class="edge" id="q-label">Exposure 08</p>' +
+        '<p class="prog" id="q-prog">01 / 07</p>' +
+      '</div>' +
+      '<p class="q-text" id="q-text"></p>' +
+      '<div class="opts" id="q-opts"></div>' +
+      '<div class="quiz-foot">' +
+        '<button class="btn btn--ghost" id="q-back" type="button">Back</button>' +
+        '<button class="btn" id="q-next" type="button" hidden>Next</button>' +
+      '</div>';
+    qText = el("q-text");
+    qOpts = el("q-opts");
+    qProg = el("q-prog");
+    qLabel = el("q-label");
+    qBack = el("q-back");
+    qNext = el("q-next");
+    qBack.onclick = function () {
+      if (idx > 0) { idx--; save(); renderQuestion(); }
+    };
+  }
+
+  /* ------------------------------------------------------------------- wire up */
+
+  load();
+  buildQuizShell();
+  renderQuestion();
+
+  if (developed && allAnswered()) {
+    reveal();
+  } else {
+    render(false, false);
+  }
+
+  el("skip").onclick = function () { finish(); };
+
+  // Keep the drawing crisp if the viewport changes size enough to matter.
+  var lastW = 0;
+  function fit() {
+    var w = canvas.clientWidth;
+    if (!w || Math.abs(w - lastW) < 24) return;
+    lastW = w;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var px = Math.round(Math.min(Math.max(w, 320), 640) * dpr);
+    if (px === canvas.width) return;
+    canvas.width = px;
+    canvas.height = px;
+    render(!el("veil").hidden ? false : true, false);
+  }
+  fit();
+  window.addEventListener("resize", function () {
+    window.clearTimeout(fit._t);
+    fit._t = window.setTimeout(fit, 180);
+  });
+})();
+</script>
+
+</body>
+</html>
