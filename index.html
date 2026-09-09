@@ -41,9 +41,12 @@
      page toggles (the veil, her quotes) need this to actually disappear. */
   [hidden] { display: none !important; }
 
+  /* No overflow-x:hidden here. Setting it computes the other axis to `auto`,
+     which turns html AND body into scroll containers and kills scrolling
+     inside an iframe. `clip` does the same sideways job without that. */
   html {
     -webkit-text-size-adjust: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
@@ -56,8 +59,6 @@
     font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-    overscroll-behavior-y: contain;
     -webkit-tap-highlight-color: rgba(111, 191, 184, 0.18);
   }
 
